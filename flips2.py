@@ -23,7 +23,10 @@ def comb_mult(base, draws):
     return comb_sum
 
 def chance_at(base, depth):
-    return math.factorial(base-1)*comb_mult(base, depth - base)/math.pow(base, depth-1) if depth >= base else 0.0
+    if depth < base:
+        return 0.0
+    
+    return math.factorial(base-1)*comb_mult(base, depth - base)/math.pow(base, depth-1)
 
 def chance_table(base):
     total = 0.0
@@ -47,15 +50,25 @@ chances = []
 rounds = 10000
 total_iterations = 0
 
+# I don't recommend using this for anything higher than r = 4
+
+'''
+Previously, you had the rand declaration within the while loop. However, we should only be declaring it once.
+The chance table gives us the chance of finding that combo BY THAT DEPTH. We should not be rerolling at each depth. 
+'''
 for _ in xrange(rounds):
     it = 0
+    # Good lord this balloons, even for r = 4. I had to do this, as a rand of .989 causes a segfault.
+    rand = random.uniform(0, .987)
+    # print rand
     while True:
         if it >= len(chances):
+            a = next(chance_gen)
             chances.append(next(chance_gen))
-        rand = random.uniform(0, 1)
         if rand < chances[it]:
             total_iterations += it + 1
             break
         it += 1
 
+print chances
 print(total_iterations * 1.0 / rounds)
