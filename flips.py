@@ -14,3 +14,5 @@ for _ in xrange(rounds):
             items.remove(chosen)
 
 print(total_iterations/rounds)
+
+# Parsonage for life!, love your code hope all is well. -AG
